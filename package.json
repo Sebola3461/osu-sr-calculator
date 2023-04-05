@@ -1,0 +1,24 @@
+{
+  "name": "osu-sr",
+  "version": "1.0.0",
+  "description": "Calculate osu! sr ",
+  "main": "index.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Sebola3461",
+  "license": "ISC",
+  "dependencies": {
+    "cli-table3": "^0.6.3",
+    "colors": "^1.4.0",
+    "osu-catch-stable": "^3.2.2",
+    "osu-classes": "^2.2.0",
+    "osu-mania-stable": "^4.0.3",
+    "osu-parsers": "^4.0.0",
+    "osu-standard-stable": "^4.0.4",
+    "osu-taiko-stable": "^4.0.4"
+  },
+  "devDependencies": {
+    "@types/node": "^18.15.11"
+  }
+}
