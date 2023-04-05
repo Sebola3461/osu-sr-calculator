@@ -18,7 +18,7 @@ export function checkUpdates(): Promise<boolean> {
     if (liveVersionData.status != 200) {
       printError("Impossible to check for updates!");
 
-      return resolve(false);
+      resolve(false);
     }
 
     const liveVersionJson = liveVersionData.data;
@@ -28,7 +28,7 @@ export function checkUpdates(): Promise<boolean> {
         "Update found! You need to update the program to continue. Please download the latest version here:\n\nhttps://github.com/Sebola3461/osu-sr-calculator/releases/download/Latest/osu-sr.zip"
       );
 
-      return resolve(true);
+      resolve(true);
     } else {
       resolve(false);
     }

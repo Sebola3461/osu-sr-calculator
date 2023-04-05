@@ -11,12 +11,14 @@ import { relativeTime } from "./relativeTime";
 import { checkUpdates } from "./updater";
 
 checkUpdates().then((v) => {
-  if (v) return;
-
   var rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout,
   });
+
+  // if (v) {
+  //   setInterval(() => process.stdout.write("\r"), 100);
+  // }
 
   printHeader("osu! Star Rating Calculator");
 
