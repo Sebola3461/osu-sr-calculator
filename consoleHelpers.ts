@@ -20,6 +20,12 @@ export function printSuccess(value: string) {
   return console.log(`${valueBox} ${value}`);
 }
 
+export function printWarn(value: string) {
+  const valueBox = `[WARNING]`.bgYellow.black;
+
+  return console.log(`${valueBox} ${value}`);
+}
+
 export function printHeader(text: string) {
   const header = colors.bold(colors.rainbow(`${text}`));
 
