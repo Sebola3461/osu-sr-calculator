@@ -103,5 +103,11 @@
 
     "resolveJsonModule": true
   },
-  "include": ["./package.json", "node_modules/*.ts", "*.ts", "index.ts"]
+  "include": [
+    "./package.json",
+    "node_modules/*.ts",
+    "*.ts",
+    "index.ts",
+    "*.txt"
+  ]
 }

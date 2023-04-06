@@ -12,7 +12,7 @@ import net from "net";
 checkUpdates().then((v) => {
   if (v) return;
 
-  printHeader("osu! Star Rating Calculator");
+  printHeader();
 
   printWarn("Starting osu! connection...");
 

@@ -1,6 +1,5 @@
 import colors from "colors";
-import Table from "cli-table3";
-import readline from "readline";
+import { readFileSync } from "fs";
 
 export function generateInputBox(question: string) {
   const questionBox = `[${question}]`.bgCyan.black;
@@ -26,8 +25,10 @@ export function printWarn(value: string) {
   return console.log(`${valueBox} ${value}`);
 }
 
-export function printHeader(text: string) {
-  const header = colors.bold(colors.rainbow(`${text}`));
+export function printHeader() {
+  const header = colors.bold(
+    colors.rainbow(readFileSync("./title.txt", "utf8"))
+  );
 
-  return console.log(`<<< [${header}] >>>\n`);
+  return console.log(header);
 }
