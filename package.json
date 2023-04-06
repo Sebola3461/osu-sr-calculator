@@ -1,7 +1,7 @@
 {
   "name": "osu-sr",
-  "version": "1.0.0-b5",
-  "description": "Calculate osu! sr ",
+  "version": "1.0.0-b7",
+  "description": "Calculate osu! sr",
   "main": "index.ts",
   "scripts": {
     "test": "ts-node-dev --transpile-only --respawn --ignore-watch node_modules"
