@@ -1,10 +1,10 @@
 {
   "name": "osu-sr",
-  "version": "1.0.0-b4",
+  "version": "1.0.0-b5",
   "description": "Calculate osu! sr ",
   "main": "index.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "ts-node-dev --transpile-only --respawn --ignore-watch node_modules"
   },
   "author": "Sebola3461",
   "license": "ISC",

@@ -1,74 +1,125 @@
-import { existsSync, readFileSync } from "fs";
-import readline from "readline";
+import { existsSync, readFileSync, writeFileSync } from "fs";
 import { calculateBeatmap, decodeBeatmap } from "./calculateBeatmap";
 import {
   printError,
-  generateInputBox,
   printHeader,
   printSuccess,
+  printWarn,
 } from "./consoleHelpers";
-import { relativeTime } from "./relativeTime";
 import { checkUpdates } from "./updater";
+import net from "net";
 
 checkUpdates().then((v) => {
-  var rl = readline.createInterface({
-    input: process.stdin,
-    output: process.stdout,
-  });
-
-  // if (v) {
-  //   setInterval(() => process.stdout.write("\r"), 100);
-  // }
+  if (v) return;
 
   printHeader("osu! Star Rating Calculator");
 
-  function requestBeatmap() {
-    rl.question(generateInputBox("OSU File Path"), function (path) {
-      path = path.trim().replace(/\\/g, "/");
+  printWarn("Starting osu! connection...");
 
-      if (!existsSync(path)) {
-        printError("Beatmap File Not Found!");
+  const server = net.createServer((socket) => {
+    socket.on("data", (data) => {
+      try {
+        let str = data.slice(4);
 
-        return requestBeatmap();
+        const message = JSON.parse(str.toString("utf-8"));
+
+        if (!message.Value) return fallbackValue(socket);
+
+        if (
+          message.Value.MessageType == "LegacyIpcDifficultyCalculationRequest"
+        )
+          calculateFor(message.Value, socket);
+      } catch (e) {
+        printError("Invalid message!");
+
+        console.log(e);
+
+        fallbackValue(socket);
       }
 
-      rl.pause();
-      rl.close();
+      socket.on("error", function (err) {
+        printError("Execution exeption!");
+        console.log(err.stack, err.message);
 
-      console.clear();
+        fallbackValue(socket);
+      });
 
-      startPrintSR(path);
+      function fallbackValue(socket: net.Socket) {
+        socket.write(
+          generateBytes(
+            JSON.stringify({
+              Type: "System.Object",
+              Value: {
+                MessageType: "LegacyIpcDifficultyCalculationResponse",
+                MessageData: {
+                  StarRating: 5,
+                },
+              },
+            }).replace(/\\/g, "")
+          )
+        );
+      }
     });
+  });
+
+  server.listen(45357, "127.0.0.1");
+
+  server.on("listening", () => {
+    printSuccess("Connected to osu!");
+  });
+
+  interface IOsuCalculationMessage {
+    MessageType: "LegacyIpcDifficultyCalculationRequest";
+    MessageData: {
+      BeatmapFile: string;
+      RulesetId: number;
+      Mods: number;
+    };
   }
 
-  function startPrintSR(path: string) {
-    printHeader("osu! Star Rating Calculator");
+  function calculateFor(message: IOsuCalculationMessage, socket: net.Socket) {
+    const file = readFileSync(message.MessageData.BeatmapFile, "utf8");
 
-    printSuccess("Beatmap Found! Calculating star rating...\n");
+    const performance = calculateBeatmap(
+      file,
+      message.MessageData.RulesetId,
+      message.MessageData.Mods
+    );
 
-    let lastUpdate = new Date();
-    let lastSr = 0;
-    setInterval(() => {
-      const file = readFileSync(path, "utf8");
+    const dataString = JSON.stringify({
+      Type: "System.Object",
+      Value: {
+        MessageType: "LegacyIpcDifficultyCalculationResponse",
+        MessageData: {
+          StarRating: performance.difficulty.starRating,
+        },
+      },
+    }).replace(/\\/g, "");
 
-      const beatmapInfo = decodeBeatmap(file);
+    socket.write(generateBytes(dataString));
 
-      const performance = calculateBeatmap(file, beatmapInfo.mode);
-
-      if (performance.difficulty.starRating != lastSr) {
-        lastUpdate = new Date();
-        lastSr = performance.difficulty.starRating;
-      }
-
-      process.stdout.write(
-        `${performance.beatmap.metadata.version.bgMagenta.black} >> ${
-          "Star Rating".bgYellow.black
-        }: ${performance.difficulty.starRating.toFixed(
-          2
-        )} >> Updated ${relativeTime(lastUpdate)} ago\r`
-      );
-    }, 5000);
+    console.log(
+      `${
+        `${performance.beatmap.metadata.artist} - ${performance.beatmap.metadata.title} [${performance.beatmap.metadata.version}]`
+          .bgCyan.black
+      } >> ${
+        "Star Rating".bgYellow.black
+      }: ${performance.difficulty.starRating.toFixed(2)}`
+    );
   }
-
-  requestBeatmap();
 });
+
+function generateBytes(text: string) {
+  let ssidByteArray = [] as number[];
+  let buffer = Buffer.from(text);
+
+  ssidByteArray = ssidByteArray.concat([buffer.byteLength, 0, 0, 0]);
+
+  for (var i = 0; i < buffer.length; i++) {
+    ssidByteArray.push(buffer[i]);
+  }
+
+  const response = Buffer.from(ssidByteArray);
+
+  return response;
+}

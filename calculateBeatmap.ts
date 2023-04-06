@@ -57,7 +57,7 @@ export function decodeBeatmap(osu_file: string) {
 export function calculateBeatmap(
   osu_file: string,
   rulesetId: number,
-  mods?: string
+  mods?: string | number
 ) {
   const decoder = new BeatmapDecoder();
   const ruleset = getRulesetById(rulesetId);
