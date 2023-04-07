@@ -3,9 +3,9 @@ import { ModCombination, RulesetBeatmap, ScoreInfo } from "osu-classes";
 import { createBeatmapInfo } from "./createBeatmapInfo";
 import { calculateAccuracy } from "./calculateAccuracy";
 import { getRulesetById } from "./getRuleset";
-import { Score } from "./types/score";
+import { Score } from "../../types/score";
 import { getTotalHits } from "./calculateHits";
-import { GameMode } from "./types/game_mode";
+import { GameMode } from "../../types/game_mode";
 
 interface ScorePerformance {
   pp: number;

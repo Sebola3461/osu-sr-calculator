@@ -1,6 +1,6 @@
 import { RulesetBeatmap, HitType } from "osu-classes";
 import { JuiceDroplet, JuiceFruit, JuiceTinyDroplet } from "osu-catch-stable";
-import { GameMode } from "./types/game_mode";
+import { GameMode } from "../../types/game_mode";
 
 export function getTotalHits(beatmap: RulesetBeatmap): number {
   if (!beatmap) return 0;

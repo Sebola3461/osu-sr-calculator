@@ -3,7 +3,7 @@ import { StandardRuleset } from "osu-standard-stable";
 import { TaikoRuleset } from "osu-taiko-stable";
 import { CatchRuleset } from "osu-catch-stable";
 import { ManiaRuleset } from "osu-mania-stable";
-import { GameMode, GameModeName } from "./types/game_mode";
+import { GameMode, GameModeName } from "../../types/game_mode";
 
 export function getRulesetById(rulesetId: number): IRuleset {
   switch (rulesetId) {

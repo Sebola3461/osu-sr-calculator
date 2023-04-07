@@ -1,5 +1,5 @@
 import { IScoreInfo } from "osu-classes";
-import { GameMode } from "./types/game_mode";
+import { GameMode } from "../../types/game_mode";
 
 export function calculateAccuracy(scoreInfo: IScoreInfo): number {
   const geki = scoreInfo.countGeki;

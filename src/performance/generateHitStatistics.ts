@@ -1,5 +1,5 @@
 import { RulesetBeatmap, IHitStatistics, MathUtils } from "osu-classes";
-import { GameMode } from "./types/game_mode";
+import { GameMode } from "../../types/game_mode";
 import {
   countDroplets,
   countFruits,
