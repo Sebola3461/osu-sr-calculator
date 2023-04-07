@@ -3,6 +3,7 @@ import {
   createWriteStream,
   existsSync,
   mkdirSync,
+  readFileSync,
   unlinkSync,
   writeFileSync,
 } from "fs";
@@ -26,8 +27,13 @@ export class Updater {
     if (serverJson.status != 200)
       return this.app.console.printError("Could not check for updates!");
 
-    if (serverJson.data.version != (process as any).npm_package_version)
+    if (
+      serverJson.data.version !=
+      JSON.parse(readFileSync("./package.json", "utf8")).version
+    )
       return this.downloadUpdate();
+
+    this.app.console.printLog("You're running the latest version!");
   }
 
   async downloadUpdate() {
