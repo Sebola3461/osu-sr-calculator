@@ -1,6 +1,6 @@
 {
     "name": "osu-sr",
-    "version": "1.2.0-b2",
+    "version": "1.2.0-b3",
     "description": "Calculate osu! sr",
     "main": "index.ts",
     "scripts": {

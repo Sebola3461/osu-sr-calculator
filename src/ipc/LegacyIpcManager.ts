@@ -131,12 +131,21 @@ export namespace LegacyIpcManager {
       /// * we need to remove it to parse as JSON
       /// TODO: Remove deprecated method `slice`
 
-      let buffer = data.slice(4);
-      const message = JSON.parse(
-        buffer.toString("utf-8")
-      ) as ILegacyIpcDifficultyCalculationRequest; /// * Try to parse it
+      const buffer = data.slice(4);
 
-      return message;
+      try {
+        const message = JSON.parse(
+          buffer.toString("utf-8")
+        ) as ILegacyIpcDifficultyCalculationRequest; /// * Try to parse it
+
+        return message;
+      } catch (e: any) {
+        this.app.console.printError(
+          "(LegacyIpcManager) Invalid IPC message content!"
+        );
+
+        return null;
+      }
     }
 
     /// * Add 4 bytes of message size to the buffer object
@@ -157,6 +166,11 @@ export namespace LegacyIpcManager {
 
     private socketDataListener(data: Buffer) {
       const message = this.decodeData(data);
+
+      if (!message)
+        return this.app.console.printWarn(
+          "(LegacyIpcManager) Message content is null. Ignoring it..."
+        );
 
       /// ? We just accept difficulty calculation requests
       if (
